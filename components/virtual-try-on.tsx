@@ -80,7 +80,7 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Virtual Try-On</DialogTitle>
+          <DialogTitle className="text-2xl">Preview</DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -129,7 +129,7 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
                     Generating...
                   </>
                 ) : (
-                  "Generate Virtual Try-On"
+                  "Continue"
                 )}
               </Button>
             )}
@@ -143,7 +143,7 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
               {isGenerating ? (
                 <div className="text-center">
                   <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">AI is generating your virtual try-on...</p>
+                  <p className="text-sm text-muted-foreground">Wears is generating your look...</p>
                 </div>
               ) : generatedImage ? (
                 <img
@@ -157,7 +157,7 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
                   <p className="text-sm">{error}</p>
                 </div>
               ) : (
-                <p className="text-muted-foreground text-center">Click "Generate Virtual Try-On" to see the result</p>
+                <p className="text-muted-foreground text-center">Click "Continue" to see the result</p>
               )}
             </Card>
 

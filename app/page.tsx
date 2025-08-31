@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/image-upload"
 import { ClothingGrid } from "@/components/clothing-grid"
 import { VirtualTryOn } from "@/components/virtual-try-on"
-import { ClosetStats } from "@/components/closet-stats"
-import { OutfitSuggestions } from "@/components/outfit-suggestions"
 import { Camera, Shirt, User } from "lucide-react"
 
 interface ClothingItem {
@@ -82,25 +80,18 @@ export default function FashionClosetPage() {
     if (selectedTrouser?.id === id) setSelectedTrouser(null)
   }
 
-  const handleSelectOutfit = (shirt: ClothingItem, trouser: ClothingItem) => {
-    setSelectedShirt(shirt)
-    setSelectedTrouser(trouser)
-  }
-
   const shirts = clothingItems.filter((item) => item.type === "shirt")
   const trousers = clothingItems.filter((item) => item.type === "trouser")
 
   const canTryOn = userPhoto && selectedShirt && selectedTrouser
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background font-mono">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 text-balance">Wears Life</h1>
-          <p className="text-muted-foreground text-lg text-pretty">
-            Upload your clothes and see how they look on you 
-          </p>
+        <div className="mb-10">
+          <h1 className="text-3xl font-medium text-foreground mb-2 text-balance">Wears</h1>
+          <p className="text-muted-foreground text-lg text-pretty">Upload clothings and see how they look on you</p>
         </div>
 
         {/* Upload Section */}
@@ -156,20 +147,6 @@ export default function FashionClosetPage() {
               />
             </CardContent>
           </Card>
-        </div>
-
-        {/* Closet Statistics */}
-        <ClosetStats items={clothingItems} selectedShirt={selectedShirt} selectedTrouser={selectedTrouser} />
-
-        {/* Outfit Suggestions */}
-        <div className="mb-8">
-          <OutfitSuggestions
-            shirts={shirts}
-            trousers={trousers}
-            onSelectOutfit={handleSelectOutfit}
-            selectedShirt={selectedShirt}
-            selectedTrouser={selectedTrouser}
-          />
         </div>
 
         {/* Clothing Grid */}
