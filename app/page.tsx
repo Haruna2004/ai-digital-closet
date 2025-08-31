@@ -91,7 +91,7 @@ export default function FashionClosetPage() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-medium text-foreground mb-2 text-balance">Wears</h1>
-          <p className="text-muted-foreground text-lg text-pretty">An online wardrobe to store your clothings and see how they blend with new ones</p>
+          <p className="text-muted-foreground text-lg text-pretty">A virtual wardrobe to store your clothings and see how they blend with new ones using AI</p>
         </div>
 
         {/* Upload Section */}
@@ -157,7 +157,7 @@ export default function FashionClosetPage() {
         />
 
         {/* Virtual Try-On Button */}
-        {canTryOn && (
+        {canTryOn ? (
           <div className="text-center mt-8">
             <Button
               onClick={() => setShowTryOn(true)}
@@ -167,7 +167,7 @@ export default function FashionClosetPage() {
               Try On Outfit
             </Button>
           </div>
-        )}
+        ): (<p className="text-center mt-8">Pick a shirt and trouser to Try on</p>)}
 
         {/* Virtual Try-On Modal */}
         {showTryOn && userPhoto && selectedShirt && selectedTrouser && (
@@ -178,6 +178,7 @@ export default function FashionClosetPage() {
             onClose={() => setShowTryOn(false)}
           />
         )}
+
       </div>
     </div>
   )
