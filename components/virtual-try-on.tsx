@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Loader2, Download, X } from "lucide-react"
+import { generateTryOnImage } from "@/app/actions/generate-tryon"
 
 interface ClothingItem {
   id: string
@@ -31,33 +32,37 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const imageUrlToBase64 = async (url: string): Promise<string> => {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(",")[1]
+        resolve(base64)
+      }
+      reader.readAsDataURL(blob)
+    })
+  }
+
   const handleGenerateTryOn = async () => {
     setIsGenerating(true)
     setError(null)
 
     try {
-      const response = await fetch("/api/generate-tryon", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userPhotoUrl: userPhoto.processedUrl || userPhoto.url,
-          shirtUrl: shirt.processedUrl || shirt.url,
-          trouserUrl: trouser.processedUrl || trouser.url,
-        }),
-      })
+      // Convert image URLs to base64
+      const [userPhotoBase64, shirtBase64, trouserBase64] = await Promise.all([
+        imageUrlToBase64(userPhoto.processedUrl || userPhoto.url),
+        imageUrlToBase64(shirt.processedUrl || shirt.url),
+        imageUrlToBase64(trouser.processedUrl || trouser.url),
+      ])
 
-      const data = await response.json()
+      const result = await generateTryOnImage(userPhotoBase64, shirtBase64, trouserBase64)
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to generate virtual try-on")
-      }
-
-      if (data.success && data.imageData) {
-        setGeneratedImage(data.imageData)
+      if (result.success && result.imageData) {
+        setGeneratedImage(result.imageData)
       } else {
-        throw new Error("No image data received")
+        throw new Error(result.error || "Failed to generate virtual try-on")
       }
     } catch (err) {
       console.error("Virtual try-on error:", err)
@@ -149,7 +154,7 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
                 <img
                   src={generatedImage || "/placeholder.svg"}
                   alt="Virtual try-on result"
-                  className="w-full h-full object-cover rounded"
+                  className="w-full h-full object-contain rounded"
                 />
               ) : error ? (
                 <div className="text-center text-destructive">

@@ -91,7 +91,7 @@ export default function FashionClosetPage() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-medium text-foreground mb-2 text-balance">Wears</h1>
-          <p className="text-muted-foreground text-lg text-pretty">Upload clothings and see how they look on you</p>
+          <p className="text-muted-foreground text-lg text-pretty">An online wardrobe to store your clothings and see how they blend with new ones when shopping</p>
         </div>
 
         {/* Upload Section */}
@@ -100,7 +100,6 @@ export default function FashionClosetPage() {
           <Card className="bg-card">
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
-                <User className="w-5 h-5" />
                 Your Photo
               </CardTitle>
             </CardHeader>
@@ -118,7 +117,6 @@ export default function FashionClosetPage() {
           <Card className="bg-card">
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
-                <Shirt className="w-5 h-5" />
                 Shirts
               </CardTitle>
             </CardHeader>
@@ -135,7 +133,6 @@ export default function FashionClosetPage() {
           <Card className="bg-card">
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
-                <Camera className="w-5 h-5" />
                 Trousers
               </CardTitle>
             </CardHeader>
