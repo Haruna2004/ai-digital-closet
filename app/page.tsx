@@ -91,7 +91,7 @@ export default function FashionClosetPage() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-medium text-foreground mb-2 text-balance">Wears</h1>
-          <p className="text-muted-foreground text-lg text-pretty">An online wardrobe to store your clothings and see how they blend with new ones when shopping</p>
+          <p className="text-muted-foreground text-lg text-pretty">An online wardrobe to store your clothings and see how they blend with new ones</p>
         </div>
 
         {/* Upload Section */}

@@ -28,7 +28,7 @@ export async function generateTryOnImage(
 
     const contents = [
       {
-        text: "Accurately swap the person's shirt and trousers with the new ones provided, while keeping everything else in the image, including colors and details, exactly the same.",
+        text: "Create a virtual try-on. Replace the person's shirt and trousers with the new clothes. Ensure a seamless and realistic fit, without altering the person, their pose, or any other elements in the photo. The colors and style of the new clothes must remain unchanged.",
       },
       {
         inlineData: {
