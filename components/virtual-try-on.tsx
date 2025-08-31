@@ -66,7 +66,7 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
       }
     } catch (err) {
       console.error("Virtual try-on error:", err)
-      setError(err instanceof Error ? err.message : "Failed to generate virtual try-on. Please try again.")
+      setError("Failed to generate virtual try-on. Please try again.")
     } finally {
       setIsGenerating(false)
     }
