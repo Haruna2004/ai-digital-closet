@@ -43,11 +43,11 @@ export function TryOnHistory({ tryOnResults, onDelete }: TryOnHistoryProps) {
     return (
       <Card className="bg-card">
         <CardHeader>
-          <CardTitle>Try-On History</CardTitle>
+          <CardTitle>History</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-center py-8">
-            No try-on results yet. Generate your first virtual try-on!
+            No outfit results yet. Generate your first virtual outfit!
           </p>
         </CardContent>
       </Card>

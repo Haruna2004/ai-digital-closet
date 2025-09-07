@@ -212,7 +212,7 @@ export default function FashionClosetPage() {
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
             >
-              Try On Outfit
+              Wear Outfit
             </Button>
           </div>
         ) : (
