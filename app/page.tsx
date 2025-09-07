@@ -70,6 +70,10 @@ export default function FashionClosetPage() {
     }
   }, [userPhoto])
 
+  useEffect(() => {
+    localStorage.setItem("fashionCloset_tryOns", JSON.stringify(tryOnResults))
+  }, [tryOnResults])
+
   const handleClothingUpload = (url: string, type: "shirt" | "trouser") => {
     const newItem: ClothingItem = {
       id: Date.now().toString(),
@@ -119,6 +123,7 @@ export default function FashionClosetPage() {
 
   const handleTryOnSuccess = (tryOnResult: TryOnResult) => {
     setTryOnResults((prev) => [tryOnResult, ...prev].slice(0, 20))
+    setShowTryOn(false)
   }
 
   const handleDeleteTryOn = (id: string) => {
