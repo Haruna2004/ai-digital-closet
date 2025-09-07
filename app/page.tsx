@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/image-upload"
 import { ClothingGrid } from "@/components/clothing-grid"
 import { VirtualTryOn } from "@/components/virtual-try-on"
-import { Camera, Shirt, User } from "lucide-react"
+import { SettingsMenu } from "@/components/settings-menu"
+import { TryOnHistory } from "@/components/try-on-history"
+import { useTheme } from "next-themes"
 
 interface ClothingItem {
   id: string
@@ -24,17 +26,28 @@ interface UserPhoto {
   processedUrl?: string
 }
 
+interface TryOnResult {
+  id: string
+  generatedImage: string
+  userPhoto: string
+  shirt: string
+  trouser: string
+  timestamp: string
+}
+
 export default function FashionClosetPage() {
   const [clothingItems, setClothingItems] = useState<ClothingItem[]>([])
   const [userPhoto, setUserPhoto] = useState<UserPhoto | null>(null)
   const [selectedShirt, setSelectedShirt] = useState<ClothingItem | null>(null)
   const [selectedTrouser, setSelectedTrouser] = useState<ClothingItem | null>(null)
   const [showTryOn, setShowTryOn] = useState(false)
+  const [tryOnResults, setTryOnResults] = useState<TryOnResult[]>([])
+  const { theme, setTheme } = useTheme()
 
-  // Load data from localStorage on mount
   useEffect(() => {
     const savedClothing = localStorage.getItem("fashionCloset_clothing")
     const savedUserPhoto = localStorage.getItem("fashionCloset_userPhoto")
+    const savedTryOns = localStorage.getItem("fashionCloset_tryOns")
 
     if (savedClothing) {
       setClothingItems(JSON.parse(savedClothing))
@@ -42,9 +55,11 @@ export default function FashionClosetPage() {
     if (savedUserPhoto) {
       setUserPhoto(JSON.parse(savedUserPhoto))
     }
+    if (savedTryOns) {
+      setTryOnResults(JSON.parse(savedTryOns))
+    }
   }, [])
 
-  // Save to localStorage whenever data changes
   useEffect(() => {
     localStorage.setItem("fashionCloset_clothing", JSON.stringify(clothingItems))
   }, [clothingItems])
@@ -75,7 +90,6 @@ export default function FashionClosetPage() {
 
   const handleDeleteItem = (id: string) => {
     setClothingItems((prev) => prev.filter((item) => item.id !== id))
-    // Clear selection if deleted item was selected
     if (selectedShirt?.id === id) setSelectedShirt(null)
     if (selectedTrouser?.id === id) setSelectedTrouser(null)
   }
@@ -85,13 +99,48 @@ export default function FashionClosetPage() {
 
   const canTryOn = userPhoto && selectedShirt && selectedTrouser
 
+  const handleReset = () => {
+    if (confirm("Are you sure you want to clear all data? This action cannot be undone.")) {
+      localStorage.removeItem("fashionCloset_clothing")
+      localStorage.removeItem("fashionCloset_userPhoto")
+      localStorage.removeItem("fashionCloset_tryOns")
+      setClothingItems([])
+      setUserPhoto(null)
+      setSelectedShirt(null)
+      setSelectedTrouser(null)
+      setShowTryOn(false)
+      setTryOnResults([])
+    }
+  }
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark")
+  }
+
+  const handleTryOnSuccess = (tryOnResult: TryOnResult) => {
+    setTryOnResults((prev) => [tryOnResult, ...prev].slice(0, 20))
+  }
+
+  const handleDeleteTryOn = (id: string) => {
+    const updatedTryOns = tryOnResults.filter((result) => result.id !== id)
+    setTryOnResults(updatedTryOns)
+    localStorage.setItem("fashionCloset_tryOns", JSON.stringify(updatedTryOns))
+  }
+
   return (
     <div className="min-h-screen bg-background font-mono">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-medium text-foreground mb-2 text-balance">Wears</h1>
-          <p className="text-muted-foreground text-lg text-pretty">A virtual wardrobe to store your clothings and see how they blend with new ones using AI</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-medium text-foreground mb-2 text-balance">Wears</h1>
+              <p className="text-muted-foreground text-lg text-pretty">
+                A virtual wardrobe to store your clothings and see how they blend with new ones using AI
+              </p>
+            </div>
+            <SettingsMenu onReset={handleReset} />
+          </div>
         </div>
 
         {/* Upload Section */}
@@ -99,9 +148,7 @@ export default function FashionClosetPage() {
           {/* User Photo Upload */}
           <Card className="bg-card">
             <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2">
-                Your Photo
-              </CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2">Your Photo</CardTitle>
             </CardHeader>
             <CardContent>
               <ImageUpload
@@ -116,9 +163,7 @@ export default function FashionClosetPage() {
           {/* Shirt Upload */}
           <Card className="bg-card">
             <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2">
-                Shirts
-              </CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2">Shirts</CardTitle>
             </CardHeader>
             <CardContent>
               <ImageUpload
@@ -132,9 +177,7 @@ export default function FashionClosetPage() {
           {/* Trouser Upload */}
           <Card className="bg-card">
             <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2">
-                Trousers
-              </CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2">Trousers</CardTitle>
             </CardHeader>
             <CardContent>
               <ImageUpload
@@ -167,7 +210,14 @@ export default function FashionClosetPage() {
               Try On Outfit
             </Button>
           </div>
-        ): (<p className="text-center mt-8">Pick a shirt and trouser to Try on</p>)}
+        ) : (
+          <p className="text-center mt-8">Pick a shirt and trouser to Try on</p>
+        )}
+
+        {/* Try-On History Section */}
+        <div className="mt-8">
+          <TryOnHistory tryOnResults={tryOnResults} onDelete={handleDeleteTryOn} />
+        </div>
 
         {/* Virtual Try-On Modal */}
         {showTryOn && userPhoto && selectedShirt && selectedTrouser && (
@@ -176,9 +226,9 @@ export default function FashionClosetPage() {
             shirt={selectedShirt}
             trouser={selectedTrouser}
             onClose={() => setShowTryOn(false)}
+            onTryOnSuccess={handleTryOnSuccess}
           />
         )}
-
       </div>
     </div>
   )

@@ -25,9 +25,10 @@ interface VirtualTryOnProps {
   shirt: ClothingItem
   trouser: ClothingItem
   onClose: () => void
+  onTryOnSuccess?: (tryOnResult: any) => void
 }
 
-export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryOnProps) {
+export function VirtualTryOn({ userPhoto, shirt, trouser, onClose, onTryOnSuccess }: VirtualTryOnProps) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -61,6 +62,25 @@ export function VirtualTryOn({ userPhoto, shirt, trouser, onClose }: VirtualTryO
 
       if (result.success && result.imageData) {
         setGeneratedImage(result.imageData)
+
+        const tryOnResult = {
+          id: Date.now().toString(),
+          generatedImage: result.imageData,
+          userPhoto: userPhoto.url,
+          shirt: shirt.url,
+          trouser: trouser.url,
+          timestamp: new Date().toISOString(),
+        }
+
+        // Save to localStorage
+        const existingTryOns = JSON.parse(localStorage.getItem("fashionCloset_tryOns") || "[]")
+        const updatedTryOns = [tryOnResult, ...existingTryOns].slice(0, 20) // Keep only last 20
+        localStorage.setItem("fashionCloset_tryOns", JSON.stringify(updatedTryOns))
+
+        // Notify parent component
+        if (onTryOnSuccess) {
+          onTryOnSuccess(tryOnResult)
+        }
       } else {
         throw new Error(result.error || "Failed to generate virtual try-on")
       }
