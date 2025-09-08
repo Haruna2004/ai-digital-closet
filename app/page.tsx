@@ -205,19 +205,19 @@ export default function FashionClosetPage() {
         />
 
         {/* Virtual Try-On Button */}
-        {canTryOn ? (
-          <div className="text-center mt-8">
+
+            <div className="text-center mt-8">
             <Button
               onClick={() => setShowTryOn(true)}
               size="lg"
+              disabled={!canTryOn}
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
             >
               Wear Outfit
             </Button>
           </div>
-        ) : (
-          <p className="text-center mt-8">Pick a shirt and trouser to Try on</p>
-        )}
+
+
 
         {/* Try-On History Section */}
         <div className="mt-8">
